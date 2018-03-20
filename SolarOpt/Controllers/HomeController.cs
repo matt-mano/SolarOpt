@@ -18,6 +18,8 @@ namespace SolarOpt.Controllers
 
         public IActionResult About()
         {
+            //This calls read
+            MeghanCode.ExcelReader.Read();
             ViewData["Message"] = "Your application description page.";
 
             return View();
