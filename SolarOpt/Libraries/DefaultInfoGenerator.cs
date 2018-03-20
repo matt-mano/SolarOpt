@@ -3,6 +3,7 @@ using SolarOpt.Models;
 using System;
 using System.Collections.Generic;
 using System.Web.Helpers;
+using Newtonsoft.Json;
 
 namespace SolarOpt.Libraries
 {
@@ -49,24 +50,28 @@ namespace SolarOpt.Libraries
         {
             public static JsonResult randomChart()
             {
-                List<dataLine> data = new List<dataLine>();
+                List<DateTime> times = new List<DateTime>();
+                List<double> values = new List<double>();
+
                 Random random = new Random();
                 int i = 0;
                 while (i < 24)
                 {
-                    dataLine dataPoint = new dataLine();
-                    dataPoint.Time = DateTime.Now.AddHours(i);
-                    dataPoint.Value = random.NextDouble() * 100;
-                    data.Add(dataPoint);
+                    times.Add(DateTime.Now.AddHours(i));
+                    values.Add(random.NextDouble() * 100);
                     i++;
                 }
-                return Json(data);
+                ChartData data = new ChartData();
+                data.Times = times;
+                data.Values = values;
+
+                return new JsonResult(data);
             }
                 
-                private class dataLine
+                private class ChartData
                 {
-                    public DateTime Time { get; set; }
-                    public double Value { get; set; }
+                    public List<DateTime> Times { get; set; }
+                    public List<double> Values { get; set; }
                 }
 
             }

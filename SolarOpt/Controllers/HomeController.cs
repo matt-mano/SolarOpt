@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SolarOpt.Libraries;
 using SolarOpt.Models;
 
 namespace SolarOpt.Controllers
@@ -32,6 +33,11 @@ namespace SolarOpt.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public JsonResult ChartDemo()
+        {
+            return DefaultInfoGenerator.IndexChartDataGenerator.randomChart();
         }
     }
 }

@@ -3,21 +3,18 @@
 }
 
 <h1>Welcome to SolarOpt</h1>
-<h5>THERE IS A GOOD REASON FOR THE STATIC PANEL OK PROFESOR</h5>
 
 
 <table id="organizer" class="table">
     <tr>
         <td id="Location"><button id="setLocation" class="btn btn-default">Set Location</button></td>
-        <td id="Device"><button id="connectButton" class-="btn btn-default">Connect</button></td>
+        <td id="Idk"><button id="setDevice" class="btn btn-default">Set Device</button></td>
     </tr>
     <tr>
         <td id="Estimated">
-            ESTIMATED POWER GOES HERE
             <canvas id="estimatedChart" width="400" height="400"></canvas>
         </td>
         <td id="Actual">
-            ACTUAL POWER GOES HERE
             <canvas id="actualChart" width="400" height="400"></canvas>
 
         </td>
@@ -34,13 +31,56 @@
     <script src="~/js/expectedChart.js"></script>
 }
 
-<script>
+    <script>
     $("#disclaimerButton").click(function () {
         alert("Please ensure that you only operate your SolarOpt device in accordance with your local laws.");
 
     });
+        $.ajax({
+            type: 'post',
+            url: @Url.Action("ChartDemo"),
+            success: function (response) {
+                var data = {
+                    labels: response.Times,
+                    datasets: [{
+                        data: response.Values
+                    }]
+                };
+
+                var config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                };
+
+                var estimateChart = ($("#estimatedChart"), config);
+            }
+
+        });
+
+        $.ajax({
+            type: 'post',
+            url: @Url.Action("ChartDemo"),
+            success: function (response) {
+                data = {
+                    labels: response.Times,
+                    datasets: [{
+                        data: response.Values
+                    }]
+                };
+
+                config = {
+                    type: 'line',
+                    data: data,
+                    options: {}
+                };
+
+                var actualChart = ($("#actualChart"), config);
+            }
+
+        });
 
 
 
 
-</script>
+    </script>
