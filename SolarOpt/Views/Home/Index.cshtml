@@ -13,6 +13,7 @@
 
 <div id="setupDialog" style="min-height:600px;">
     <p>To get started choose one of the three setup options below:</p>
+
     <hr />
     <ul class="nav nav-tabs">
         <li><a data-toggle="tab" href="#useLastAddress">Use Last Address</a></li>
@@ -45,11 +46,12 @@
 </div>
 
 <div id="mainScreen" style="display:none;">
-    <p>Your Location:</p>
-</div>
-<div id="map" style="display:none;"></div>
-<button class="btn btn-lg" id="disclaimerButton">LEGAL DISCLAIMER</button>
+    <p>Your Location:</p><button id="resetEverythingButton" onclick="window.location.reload(true);" class="btn btn-danger">Reset Address</button>    <button id="sendDataButton" onclick="alert('Data Sent!');" class="btn-default btn">Send Data</button>
 
+
+</div>
+
+<div id="map" style="display:none;"></div>
 
 @section Scripts{
     <script src="~/js/jquery-3.3.1.js"></script>
@@ -58,10 +60,13 @@
 }
 
 
-    <script>
+<script>
     var map;
     var marker;
     var geocoder;
+    var times;
+    var anglesA;
+    var anglesH;
 
     function initMap() {
         var uluru = { lat: -25.363, lng: 131.044 };
@@ -76,11 +81,6 @@
         geocoder = new google.maps.Geocoder;
 
     };
-
-    $("#disclaimerButton").click(function () {
-        alert("Please ensure that you only operate your SolarOpt device in accordance with your local laws.");
-
-    });
     var lat, long, address;
 
     $("#lastAddress").click(function () {
@@ -107,10 +107,12 @@
         var addressToGeocode = {
             address: address
         };
+        var lat;
+        var lng;
          if (geocoder) {
              geocoder.geocode({ 'address': address }, function (results, status) {
-                 console.log(results[0].geometry.location.lat());
-                 console.log(results[0].geometry.location.lng());
+                 lat = (results[0].geometry.location.lat());
+                 lng = (results[0].geometry.location.lng());
                  map.setCenter(results[0].geometry.location);
                  marker.setPosition(results[0].geometry.location);
                 }
@@ -121,6 +123,7 @@
          }
          $("#map").show();
          $("#mainScreen").show();
+         //GetDataFromSpreadsheet(lat,lng);
 
     });
 
@@ -141,7 +144,29 @@
         map.setCenter(new google.maps.LatLng(lat, long));
         marker.setPosition(new google.maps.LatLng(lat, long));
 
-    }
+        };
+
+    function GetDataFromSpreadsheet(lat, long) {
+        var latLong = { lat: lat, lng:long };
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("GetDataFromSpreadsheet")',
+            data:latLong,
+            success: function (data) {
+                console.log(data);
+                times = data.time;
+                anglesA = data.angleA;
+                anglesH = data.angleH;
+            },
+            failure:
+            function () {
+                alert("ERROR");
+
+            }
+        });
+
+
+        };
 
 
     </script>

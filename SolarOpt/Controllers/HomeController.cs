@@ -8,6 +8,7 @@ using Microsoft.Office.Interop.Excel;
 using SolarOpt.Libraries;
 using SolarOpt.Models;
 
+
 namespace SolarOpt.Controllers
 {
     public class HomeController : Controller
@@ -39,11 +40,12 @@ namespace SolarOpt.Controllers
         }
 
 
+
         public void UpdateLatLongInSpreadSheet()
         {
             //Init excel application and open NOAA_Solar_Calculations_day.xlsx
             Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            Microsoft.Office.Interop.Excel.Workbook excelWorkbook = excelApp.Workbooks.Open("C:/Users/Meghan/Desktop/NOAA_Solar_Calculations_day", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            Workbook excelWorkbook = excelApp.Workbooks.Open("~/xls/NOAA_Solar_Calculations_day.xls", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
             Microsoft.Office.Interop.Excel.Worksheet excelWorksheet;
             excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
 
@@ -64,9 +66,10 @@ namespace SolarOpt.Controllers
 
         public JsonResult GetDataFromSpreadsheet()
         {
+            
             //Init excel application and open NOAA_Solar_Calculations_day.xlsx
             Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            Workbook excelWorkbook = excelApp.Workbooks.Open("C:/Users/Meghan/Desktop/NOAA_Solar_Calculations_day", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            Workbook excelWorkbook = excelApp.Workbooks.Open("~/xls/NOAA_Solar_Calculations_day.xls", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
             Worksheet excelWorksheet;
             excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
 

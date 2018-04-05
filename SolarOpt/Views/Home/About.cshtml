@@ -1,14 +1,52 @@
-﻿<div id="map"></div>
+﻿<h2>Energy Predictions:</h2>
+<h4>Estimated Energy:</h4>
+<canvas id="chart1"></canvas>
+
+<h4>Solar Panel Position:</h4>
+<canvas id="chart2"></canvas>
+<script src="~/js/Chart.js"></script>
 <script>
-    var map;
-    function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: { lat: -34.397, lng: 150.644 },
-            zoom: 8
-        });
-    }
+    var chart = new Chart(document.getElementById("chart1"), {
+        type: 'line',
+        data: {
+            labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+            datasets: [{
+                data: [17, 35, 70, 106, 140, 160, 133, 46, 30, 17],
+                label: "Predicted Power",
+                borderColor: "#3e95cd",
+                fill: false
+            }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Predicted Power'
+            }
+        }
+    });
+
+    var chart2 = new Chart(document.getElementById("chart2"), {
+        type: 'line',
+        data: {
+            labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+            datasets: [{
+                data: [86, 114, 125, 150, 190, 160, 133, 100, 80, 30],
+                label: "Predicted Position",
+                borderColor: "#3e95cd",
+                fill: false
+            }
+            ]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Predicted Position'
+            }
+        }
+    });
+
+
 </script>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2o9SJdn5SnNhWGlW9I3MZJ0kp8sJILm8&callback=initMap">
-</script>
+
 
