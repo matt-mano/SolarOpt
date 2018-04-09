@@ -160,7 +160,8 @@ namespace SolarOpt.Controllers
         [HttpPost]
         public void TCPRequester()
         {
-            var ArduioTalker = new Talk2Arduino();
+            var ArduinoTalker = new Talk2Arduino();
+            ArduinoTalker.TCPListen();
         }
 
         [HttpPost]
