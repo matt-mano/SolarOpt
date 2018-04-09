@@ -95,6 +95,8 @@
                 UpdateMap(latAndLong.lat(), latAndLong.lng());
                 $("#map").show();
                 $("#mainScreen").show();
+                GetDataFromSpreadsheet();
+
             }
         });
 
@@ -119,7 +121,7 @@
                  $("#map").show();
                  $("#mainScreen").show();
                  UpdateLatLongInSpreadSheet(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                 GetDataFromSpreadsheet(lat, lng);
+                 GetDataFromSpreadsheet();
                 }
              );
          } else {
@@ -138,6 +140,9 @@
         UpdateMap(lat, long);
         $("#map").show();
         $("#mainScreen").show();
+        UpdateLatLongInSpreadSheet(lat, long);
+        GetDataFromSpreadsheet();
+
 
 
     });
@@ -173,7 +178,7 @@
 
         function UpdateLatLongInSpreadSheet(lat, long) {
 
-            var latLong = { lat: lat, lng: long, timeZone: new Date().getTimezoneOffset() };
+            var latLong = { lat: lat, lng: long, timeZone: (new Date().getTimezoneOffset())/60 };
         $.ajax({
             type: 'POST',
             url: '@Url.Action("UpdateLatLongInSpreadSheet")',
