@@ -105,7 +105,7 @@ namespace SolarOpt.Controllers
             }
            
             //Closes package
-            package.Save();
+            package.Dispose();
 
             //Return
             return Json(new { Time = TimeFractions, AngleH = AngleH, AngleA = AngleA });
@@ -146,7 +146,11 @@ namespace SolarOpt.Controllers
         }
 
 
-
+        [HttpPost]
+        public void TCPRequester()
+        {
+            Talk2Arduino.DoAThing();
+        }
 
         [HttpPost]
         public JsonResult ChartDemo()
