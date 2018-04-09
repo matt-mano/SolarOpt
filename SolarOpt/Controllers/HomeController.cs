@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Office.Interop.Excel;
+using OfficeOpenXml;
 using SolarOpt.Libraries;
 using SolarOpt.Models;
 
@@ -41,83 +42,91 @@ namespace SolarOpt.Controllers
 
 
 
-        public void UpdateLatLongInSpreadSheet()
+        public void UpdateLatLongInSpreadSheet(double lat, double lng, int timeZone)
         {
-            //Init excel application and open NOAA_Solar_Calculations_day.xlsx
-            Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            Workbook excelWorkbook = excelApp.Workbooks.Open("~/xls/NOAA_Solar_Calculations_day.xls", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
-            Microsoft.Office.Interop.Excel.Worksheet excelWorksheet;
-            excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+            //Open package and set values
+            ExcelPackage package = new ExcelPackage(new System.IO.FileInfo("wwwroot/xls/NOAA_Solar_Calculations_day.xlsx"));
+            ExcelWorksheet sheet = package.Workbook.Worksheets[1];
 
-            //Enter user location data
-            Range latRange = (Range)excelWorksheet.Cells[3, 2];
-            latRange.Value = "50"; //Latitude
-            Range longRange = (Range)excelWorksheet.Cells[4, 2];
-            longRange.Value = "50"; //Longitude
-            Range timeZoneRange = (Range)excelWorksheet.Cells[5, 2];
-            timeZoneRange.Value = "3"; //Time Zone
+            sheet.Cells[3, 2].Value = lat;
+            sheet.Cells[4, 2].Value = lng;
+            sheet.Cells[5, 2].Value = timeZone;
+            sheet.Cells[7, 2].Value = DateTime.Today.ToShortDateString();
 
-            //Close workbook and application
-            excelWorkbook.Save();
-            excelWorkbook.Close();
-            excelApp.Quit();
+            //Closes package
+            package.Save();
+
+
+            ////Init excel application and open NOAA_Solar_Calculations_day.xlsx
+            //Application excelApp = new Microsoft.Office.Interop.Excel.Application();
+            //Workbook excelWorkbook = excelApp.Workbooks.Open("~/xls/NOAA_Solar_Calculations_day.xls", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            //Microsoft.Office.Interop.Excel.Worksheet excelWorksheet;
+            //excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
+
+            ////Enter user location data
+            //Range latRange = (Range)excelWorksheet.Cells[3, 2];
+            //latRange.Value = "50"; //Latitude
+            //Range longRange = (Range)excelWorksheet.Cells[4, 2];
+            //longRange.Value = "50"; //Longitude
+            //Range timeZoneRange = (Range)excelWorksheet.Cells[5, 2];
+            //timeZoneRange.Value = "3"; //Time Zone
+
+            ////Close workbook and application
+            //excelWorkbook.Save();
+            //excelWorkbook.Close();
+            //excelApp.Quit();
 
         }
 
         public JsonResult GetDataFromSpreadsheet()
         {
-            
-            //Init excel application and open NOAA_Solar_Calculations_day.xlsx
-            Application excelApp = new Microsoft.Office.Interop.Excel.Application();
-            Workbook excelWorkbook = excelApp.Workbooks.Open("~/xls/NOAA_Solar_Calculations_day.xls", 0, false, 5, "", "", false, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "", true, false, 0, true, false, false);
-            Worksheet excelWorksheet;
-            excelWorksheet = (Microsoft.Office.Interop.Excel.Worksheet)excelWorkbook.Worksheets.get_Item(1);
 
-            //Extract time and angle data
-            Range TimeCol = (Range)excelWorksheet.UsedRange.Columns[5];
-            Array TimeVals = (Array)TimeCol.Cells.Value;
-            string[] Time = TimeVals.OfType<object>().Select(o => o.ToString()).ToArray();
+            ExcelPackage package = new ExcelPackage(new System.IO.FileInfo("wwwroot/xls/NOAA_Solar_Calculations_day.xlsx"));
+            ExcelWorksheet sheet = package.Workbook.Worksheets[1];
+            var start = sheet.Dimension.Start;
+            var end = sheet.Dimension.End;
+            List<DateTime> TimeFractions = new List<DateTime>();
+            List<double> AngleH = new List<double>();
+            List<double> AngleA = new List<double>();
 
-            Range AngHCol = (Range)excelWorksheet.UsedRange.Columns[33];
-            Array AngHVals = (Array)AngHCol.Cells.Value;
-            string[] AngH = AngHVals.OfType<object>().Select(o => o.ToString()).ToArray();
+            int row = start.Row;
+            //Skip headers
+            row++;
+            //Parse rows one by one
+            while(row < end.Row)
+            {
+                //Add the thing from this row to each
+                TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
+                AngleH.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                
+                //increment row
+                row++;
+            }
+           
+            //Closes package
+            package.Save();
 
-            Range AngACol = (Range)excelWorksheet.UsedRange.Columns[33];
-            Array AngAVals = (Array)AngACol.Cells.Value;
-            string[] AngA = AngAVals.OfType<object>().Select(o => o.ToString()).ToArray();
-            Console.WriteLine(AngH[1]);
-
-            //Close workbook and application
-            excelWorkbook.Save();
-            excelWorkbook.Close();
-            excelApp.Quit();
-
-            //Create an anonymous object that holds the three arrays
-            //OBJECT ORIENTED BULLSHIT INCOMING DO NOT QUESTION THE MAGIC
-            return Json(new { Time = TimeCol, AngleH = AngHCol, AngleA = AngACol });
+            //Return
+            return Json(new { Time = TimeFractions, AngleH = AngleH, AngleA = AngleA });
 
         }
 
         public JsonResult GetLatLongFromSpreadsheet()
         {
-            return Json(getLatLongFromExcel());
+            //Open package and get values
+            ExcelPackage package = new ExcelPackage(new System.IO.FileInfo("wwwroot/xls/NOAA_Solar_Calculations_day.xlsx"));
+            ExcelWorksheet sheet = package.Workbook.Worksheets[1];
+
+            var lat = Convert.ToDouble(sheet.Cells[3, 2].Text);
+            var lng = Convert.ToDouble(sheet.Cells[4, 2].Text);
+
+            //Closes package
+            package.Save();
+
+            return (Json(new LatLong(lat, lng)));
         }
 
-        //Could you finish implementing this method?
-        public LatLong getLatLongFromExcel()
-        {
-            /*
-             * Do some magic to get lat and long from the sheet
-             * Store the lat and long in the variables below
-             * And then I wrote the object oriented crap
-             */
-            double lat = 39.9612;
-            double lng = -82.9988;
-
-            //Return a new LatLong object with the specified parameters
-            return (new LatLong(lat, lng));
-
-        }
 
 
         //Here is the class to return for reference/testing

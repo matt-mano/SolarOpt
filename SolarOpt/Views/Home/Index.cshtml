@@ -60,7 +60,7 @@
 }
 
 
-<script>
+    <script>
     var map;
     var marker;
     var geocoder;
@@ -111,19 +111,22 @@
         var lng;
          if (geocoder) {
              geocoder.geocode({ 'address': address }, function (results, status) {
+                 console.log(results);
                  lat = (results[0].geometry.location.lat());
                  lng = (results[0].geometry.location.lng());
                  map.setCenter(results[0].geometry.location);
                  marker.setPosition(results[0].geometry.location);
+                 $("#map").show();
+                 $("#mainScreen").show();
+                 UpdateLatLongInSpreadSheet(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                 GetDataFromSpreadsheet(lat, lng);
                 }
              );
          } else {
              alert("Address lookup failed, here's Austrailia!")
 
          }
-         $("#map").show();
-         $("#mainScreen").show();
-         //GetDataFromSpreadsheet(lat,lng);
+
 
     });
 
@@ -157,6 +160,27 @@
                 times = data.time;
                 anglesA = data.angleA;
                 anglesH = data.angleH;
+            },
+            failure:
+            function () {
+                alert("ERROR");
+
+            }
+        });
+
+
+        };
+
+        function UpdateLatLongInSpreadSheet(lat, long) {
+
+            var latLong = { lat: lat, lng: long, timeZone: new Date().getTimezoneOffset() };
+        $.ajax({
+            type: 'POST',
+            url: '@Url.Action("UpdateLatLongInSpreadSheet")',
+            data:latLong,
+            success: function () {
+                console.log("DONE");
+
             },
             failure:
             function () {
