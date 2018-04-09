@@ -7,9 +7,12 @@ namespace SolarOpt.Libraries
 {
     public class Talk2Arduino
     {
-        public static void DoAThing()
+        public  void DoAThing()
         {
             int i = 2;
         }
+
+
+
     }
 }

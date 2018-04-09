@@ -112,6 +112,52 @@ namespace SolarOpt.Controllers
 
         }
 
+
+        public DataForTCP GetDataFromSpreadsheetTCP()
+        {
+
+            ExcelPackage package = new ExcelPackage(new System.IO.FileInfo("wwwroot/xls/NOAA_Solar_Calculations_day.xlsx"));
+            ExcelWorksheet sheet = package.Workbook.Worksheets[1];
+            var start = sheet.Dimension.Start;
+            var end = sheet.Dimension.End;
+            List<DateTime> TimeFractions = new List<DateTime>();
+            List<double> AngleH = new List<double>();
+            List<double> AngleA = new List<double>();
+
+            int row = start.Row;
+            //Skip headers
+            row++;
+            //Parse rows one by one
+            while (row < end.Row)
+            {
+                //Add the thing from this row to each
+                TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
+                AngleH.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+
+                //increment row
+                row++;
+            }
+
+            //Closes package
+            package.Dispose();
+
+            //Return
+            var Data = new DataForTCP();
+            Data.dates = TimeFractions;
+            Data.angleH = AngleH;
+            Data.angleA = AngleA;
+            return Data;
+        }
+
+        public class DataForTCP {
+            public List<DateTime> dates { get; set; }
+            public List<double> angleH { get; set; }
+            public List<double> angleA { get; set; }
+
+        }
+
+
         public JsonResult GetLatLongFromSpreadsheet()
         {
             //Open package and get values
@@ -149,7 +195,8 @@ namespace SolarOpt.Controllers
         [HttpPost]
         public void TCPRequester()
         {
-            Talk2Arduino.DoAThing();
+            var ArduioTalker = new Talk2Arduino();
+            ArduioTalker.DoAThing();
         }
 
         [HttpPost]
