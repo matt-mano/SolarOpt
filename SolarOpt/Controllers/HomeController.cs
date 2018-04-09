@@ -93,7 +93,7 @@ namespace SolarOpt.Controllers
             //Skip headers
             row++;
             //Parse rows one by one
-            while(row < end.Row)
+            while(row < end.Row && row < 15)
             {
                 //Add the thing from this row to each
                 TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));

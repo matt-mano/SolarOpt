@@ -18,6 +18,18 @@ namespace SolarOpt.Libraries
         public List<double> angleH { get; set; }
         public List<double> angleA { get; set; }
 
+        public string datesToString()
+        {
+            string returner = null;
+            foreach(var date in dates)
+            {
+                returner += (date.ToShortTimeString());
+                returner += ",";
+            }
+            returner = returner.Substring(returner.Length - 2);
+            return returner;
+        }
+
     }
     public class Talk2Arduino
     {
