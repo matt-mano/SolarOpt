@@ -18,15 +18,21 @@ namespace SolarOpt.Libraries
         public List<double> angleH { get; set; }
         public List<double> angleA { get; set; }
 
-        public string datesToString()
+        public string GenerateTCPString()
         {
             string returner = "";
-            foreach(var date in dates)
+            returner += "1,12,";
+            foreach(var a in angleA)
             {
-                returner += (date.ToShortTimeString());
+                returner += Convert.ToString(a);
                 returner += ",";
             }
-            returner = returner.Substring(returner.Length - 2);
+            foreach (var h in angleH)
+            {
+                returner += Convert.ToString(h);
+                returner += ",";
+            }
+            returner = returner.Substring(0,returner.Length - 2);
             return returner;
         }
 
@@ -80,7 +86,7 @@ namespace SolarOpt.Libraries
                     while (true)
                     {
                         DataForTCP data = GetDataFromSpreadsheetTCP();
-                        string time = data.datesToString();
+                        string time = data.GenerateTCPString();
                         //string time = "Hello";
                         byte[] msg = System.Text.Encoding.ASCII.GetBytes(time);
                         stream.Write(msg, 0, msg.Length);
