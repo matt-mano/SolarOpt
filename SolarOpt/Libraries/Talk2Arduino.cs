@@ -20,7 +20,7 @@ namespace SolarOpt.Libraries
 
         public string datesToString()
         {
-            string returner = null;
+            string returner = "";
             foreach(var date in dates)
             {
                 returner += (date.ToShortTimeString());
