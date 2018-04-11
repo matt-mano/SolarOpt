@@ -21,7 +21,8 @@ namespace SolarOpt.Libraries
         public string GenerateTCPString()
         {
             string returner = "";
-            returner += "1,2,5,";
+            var count = angleA.Count;
+            returner += "1," + Convert.ToString(count) + ",";
             foreach(var a in angleA)
             {
                 returner += Convert.ToString(a);
@@ -59,7 +60,7 @@ namespace SolarOpt.Libraries
             try
             {
                 //Init server
-                Int32 port1 = 12345;
+                Int32 port1 = 12346;
                 IPAddress localIP = GetIP();
                 server = new TcpListener(localIP, port1);
                 server.Start();
@@ -83,13 +84,14 @@ namespace SolarOpt.Libraries
                     NetworkStream stream = client.GetStream();
 
                     int i;
-                                  
-                    DataForTCP data = GetDataFromSpreadsheetTCP();
-                    string time = data.GenerateTCPString();
-                    //string time = "Hello";
-                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(time);
-                    stream.Write(msg, 0, msg.Length);
-                    
+                    while (true)
+                    {
+                        DataForTCP data = GetDataFromSpreadsheetTCP();
+                        string time = data.GenerateTCPString();
+                        //string time = "Hello";
+                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(time);
+                        stream.Write(msg, 0, msg.Length);
+                    }
                     // Send back a response.
                     //byte[] msg = 
                     //stream.Write(msg, 0, msg.Length);
@@ -146,12 +148,12 @@ namespace SolarOpt.Libraries
             //Skip headers
             row++;
             //Parse rows one by one
-            while (row < end.Row && row < 9)
+            while (row < end.Row && row < 15)
             {
                 //Add the thing from this row to each
                 TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
                 AngleH.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
-                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 34].Text));
 
                 //increment row
                 row++;

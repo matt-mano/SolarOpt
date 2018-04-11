@@ -50,7 +50,7 @@ namespace SolarOpt.Controllers
 
             sheet.Cells[3, 2].Value = lat;
             sheet.Cells[4, 2].Value = lng;
-            sheet.Cells[5, 2].Value = timeZone;
+            sheet.Cells[5, 2].Value = -1*timeZone;
             sheet.Cells[7, 2].Value = DateTime.Today.ToShortDateString();
 
             //Closes package
@@ -98,7 +98,7 @@ namespace SolarOpt.Controllers
                 //Add the thing from this row to each
                 TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
                 AngleH.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
-                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 34].Text));
                 
                 //increment row
                 row++;
