@@ -14,6 +14,7 @@ namespace SolarOpt.Libraries
 {
     public class DataForTCP
     {
+        public static int interval = 12;
         public List<DateTime> dates { get; set; }
         public List<double> angleH { get; set; }
         public List<double> angleA { get; set; }
@@ -22,7 +23,7 @@ namespace SolarOpt.Libraries
         {
             string returner = "";
             var count = angleA.Count;
-            returner += "1," + Convert.ToString(count) + ",";
+            returner += "1,2" + Convert.ToString(count) + ",";
             foreach(var a in angleA)
             {
                 returner += Convert.ToString(a);
@@ -40,6 +41,8 @@ namespace SolarOpt.Libraries
     }
     public class Talk2Arduino
     {
+        public static int interval = 10; //every hour
+        public static int num_interval = 13;//12 hours
         public TcpListener server = null;
         public IPAddress GetIP()
         {
@@ -59,6 +62,7 @@ namespace SolarOpt.Libraries
         {
             try
             {
+                //DataForTCP data1 = GetDataFromSpreadsheetTCP();
                 //Init server
                 Int32 port1 = 12345;
                 IPAddress localIP = GetIP();
@@ -143,11 +147,10 @@ namespace SolarOpt.Libraries
             List<double> AngleH = new List<double>();
             List<double> AngleA = new List<double>();
 
-            int row = start.Row;
-            //Skip headers
-            row++;
+            int row_start = 71;//start.Row; 7 AM
+            int row = row_start;
             //Parse rows one by one
-            while (row < end.Row && row < 15)
+            while (row <= (row_start + num_interval*interval))
             {
                 //Add the thing from this row to each
                 TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
@@ -155,7 +158,7 @@ namespace SolarOpt.Libraries
                 AngleA.Add(Convert.ToDouble(sheet.Cells[row, 34].Text));
 
                 //increment row
-                row++;
+                row = row + interval;
             }
 
             //Closes package
