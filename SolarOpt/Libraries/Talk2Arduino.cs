@@ -21,7 +21,8 @@ namespace SolarOpt.Libraries
         public string GenerateTCPString()
         {
             string returner = "";
-            returner += "1,12,";
+            var count = angleA.Count;
+            returner += "1," + Convert.ToString(count) + ",";
             foreach(var a in angleA)
             {
                 returner += Convert.ToString(a);
@@ -152,7 +153,7 @@ namespace SolarOpt.Libraries
                 //Add the thing from this row to each
                 TimeFractions.Add(Convert.ToDateTime(sheet.Cells[row, 5].Text));
                 AngleH.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
-                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 33].Text));
+                AngleA.Add(Convert.ToDouble(sheet.Cells[row, 34].Text));
 
                 //increment row
                 row++;
