@@ -60,7 +60,7 @@ namespace SolarOpt.Libraries
             try
             {
                 //Init server
-                Int32 port1 = 12346;
+                Int32 port1 = 12345;
                 IPAddress localIP = GetIP();
                 server = new TcpListener(localIP, port1);
                 server.Start();
@@ -84,14 +84,13 @@ namespace SolarOpt.Libraries
                     NetworkStream stream = client.GetStream();
 
                     int i;
-                    while (true)
-                    {
-                        DataForTCP data = GetDataFromSpreadsheetTCP();
-                        string time = data.GenerateTCPString();
-                        //string time = "Hello";
-                        byte[] msg = System.Text.Encoding.ASCII.GetBytes(time);
-                        stream.Write(msg, 0, msg.Length);
-                    }
+ 
+                    DataForTCP data = GetDataFromSpreadsheetTCP();
+                    string time = data.GenerateTCPString();
+                    //string time = "Hello";
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(time);
+                    stream.Write(msg, 0, msg.Length);
+                    
                     // Send back a response.
                     //byte[] msg = 
                     //stream.Write(msg, 0, msg.Length);
