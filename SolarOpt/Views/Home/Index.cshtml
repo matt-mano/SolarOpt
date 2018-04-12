@@ -46,7 +46,7 @@
 </div>
 
 <div id="mainScreen" style="display:none;">
-    <p>Your Location:</p><button id="resetEverythingButton" onclick="window.location.reload(true);" class="btn btn-danger">Reset Address</button>    <button id="sendDataButton" onclick="alert('Data Sent!');" class="btn-default btn">Send Data</button>
+    <p>Your Location:</p><button id="resetEverythingButton" onclick="window.location.reload(true);" class="btn btn-danger">Reset Address</button>    <button id="sendDataButton" class="btn-default btn">Send Data</button>
 
 
 </div>
@@ -198,7 +198,6 @@
         };
 
         $("#sendDataButton").click(function () {
-            alert("CLICKED");
             $.ajax({
             type: 'POST',
             url: '@Url.Action("TCPRequester")',

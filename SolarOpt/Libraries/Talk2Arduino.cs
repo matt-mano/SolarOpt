@@ -23,7 +23,9 @@ namespace SolarOpt.Libraries
         {
             string returner = "";
             var count = angleA.Count;
-            returner += "1,12,13,"; //we should def change this later to take in interval and num of intervals actually
+            returner += "1,"; //we should def change this later to take in interval and num of intervals actually
+            returner += Convert.ToString(angleH.Count());
+            returner += ",";
             foreach(var a in angleA)
             {
                 returner += Convert.ToString(a);
@@ -41,11 +43,15 @@ namespace SolarOpt.Libraries
     }
     public class Talk2Arduino
     {
+
+
         public static int interval = 10; //every hour
         public static int num_interval = 13;//12 hours
         public TcpListener server = null;
         public IPAddress GetIP()
         {
+
+
             var host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (var ip in host.AddressList)
             {
@@ -60,6 +66,8 @@ namespace SolarOpt.Libraries
         //Listen for incoming TCP Requests
         public void TCPListen()
         {
+            DataForTCP datas = GetDataFromSpreadsheetTCP();
+            string times = datas.GenerateTCPString();
             try
             {
                 //DataForTCP data1 = GetDataFromSpreadsheetTCP();
