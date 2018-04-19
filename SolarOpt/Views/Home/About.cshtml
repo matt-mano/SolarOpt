@@ -1,19 +1,66 @@
-﻿<h2>Energy Predictions:</h2>
-<h4>Estimated Energy:</h4>
-<canvas id="chart1"></canvas>
+﻿@model SolarOpt.Libraries.SolarPredicter.PowerData
 
-<h4>Solar Panel Position:</h4>
-<canvas id="chart2"></canvas>
+
+<h2>Energy Estimates</h2>
+<table class="table table-striped">
+    <tr>
+        <td>Weather for @Model.City :</td>
+        <td>@Model.CurrentWeather</td>
+    </tr>
+    <tr>
+        <td>Weather Type:</td>
+        <td><img src="@Model.UrlForIcon"/></td>
+    </tr>
+    <tr>
+        <td>Predicted Current Power Generation (watts): </td>
+        <td>@Model.CurrentPower</td>
+    </tr>
+    <tr>
+        <td>Predicted Daily Power Generation (watt/hours): </td>
+        <td>@Model.DailyPower</td>
+    </tr>
+
+</table>
+<h2>Solar Panel Position:</h2>
+<canvas id="angleH"></canvas>
+
 <script src="~/js/Chart.js"></script>
 <script>
-    var chart = new Chart(document.getElementById("chart1"), {
+    var hs = [];
+    @foreach (var h in Model.AngleH)
+    {
+        @:hs.push(@h);
+    }
+
+    var as = [];
+    @foreach (var a in Model.AngleA)
+    {
+        @:as.push(@a);
+    }
+
+    var times = [];
+    @foreach (var t in Model.Times)
+    {
+        @:times.push("@t.ToShortTimeString()");
+    }
+    console.log(as);
+    console.log(hs);
+    console.log(times);
+
+    var angleH = new Chart(document.getElementById("angleH"), {
         type: 'line',
         data: {
-            labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+            labels: times,
             datasets: [{
-                data: [17, 35, 70, 106, 140, 160, 133, 46, 30, 17],
-                label: "Predicted Power",
+                data: hs,
+                label: "Servo Angle (Solar Elevation)",
                 borderColor: "#3e95cd",
+                fill: false
+            },
+            {
+                data: as,
+                label: "Base Angle (Angle From North)",
+                borderColor: "#c45000",
                 fill: false
             }
             ]
@@ -22,29 +69,25 @@
             title: {
                 display: true,
                 text: 'Predicted Power'
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Angle Degrees'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Time'
+                    }
+                }],
             }
         }
     });
 
-    var chart2 = new Chart(document.getElementById("chart2"), {
-        type: 'line',
-        data: {
-            labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
-            datasets: [{
-                data: [86, 114, 125, 150, 190, 160, 133, 100, 80, 30],
-                label: "Predicted Position",
-                borderColor: "#3e95cd",
-                fill: false
-            }
-            ]
-        },
-        options: {
-            title: {
-                display: true,
-                text: 'Predicted Position'
-            }
-        }
-    });
+
 
 
 </script>

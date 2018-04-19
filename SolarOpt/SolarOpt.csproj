@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Chart.js" Version="2.7.1" />
+    <PackageReference Include="d3" Version="5.1.0" />
     <PackageReference Include="EPPlus.Core" Version="1.5.4" />
     <PackageReference Include="EPPlus.Core.Extensions" Version="1.2.7" />
     <PackageReference Include="jQuery" Version="3.3.1" />
@@ -14,6 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.Office.Interop.Excel" Version="15.0.4795.1000" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" />
+    <PackageReference Include="OpenWeatherMap" Version="1.1.0" />
   </ItemGroup>
 
   <ItemGroup>

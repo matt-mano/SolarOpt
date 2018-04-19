@@ -25,7 +25,7 @@ namespace SolarOpt.Controllers
             MeghanCode.ExcelReader.Read();
             ViewData["Message"] = "Your application description page.";
 
-            return View();
+            return View(SolarPredicter.MakePredictionAndGetAngles("sunny"));
         }
 
         public IActionResult Contact()
