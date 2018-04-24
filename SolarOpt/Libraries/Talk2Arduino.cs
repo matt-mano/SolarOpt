@@ -23,8 +23,8 @@ namespace SolarOpt.Libraries
         {
             string returner = "";
             var count = angleA.Count;
-            returner += "1,"; //we should def change this later to take in interval and num of intervals actually
-            returner += "12,13";
+            returner += "1444,"; //we should def change this later to take in interval and num of intervals actually
+            returner += "20,5";
             returner += ",";
             foreach(var a in angleA)
             {
