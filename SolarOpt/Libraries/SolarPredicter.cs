@@ -39,7 +39,7 @@ namespace SolarOpt.Libraries
             //double solarMinutes = Convert.ToDouble(sheet.Cells[27, 2].Text);
             //DateTime sunrise = Convert.ToDateTime(sheet.Cells[25, 2].Text);
             //DateTime sunset = Convert.ToDateTime(sheet.Cells[26, 2].Text);
-            double solarMinutes = 1000;
+            double solarMinutes;
             PowerData data = new PowerData();
 
             //Now get all teh angle data
@@ -51,6 +51,11 @@ namespace SolarOpt.Libraries
             var lat = Convert.ToDouble(sheet.Cells[3, 2].Text);
             var lng = Convert.ToDouble(sheet.Cells[4, 2].Text);
             int row = start.Row;
+
+            //Get sunrise and sunset
+            double sunrise = Convert.ToDouble(sheet.Cells[2, 25].Text);
+            double sunset = Convert.ToDouble(sheet.Cells[2, 26].Text);
+            solarMinutes = (sunset - sunrise) * 24 * 60;
 
             //Skip headers
             row++;
@@ -92,12 +97,12 @@ namespace SolarOpt.Libraries
             //Make the predictions
             if (cloudyNess < 50)
             {
-                data.DailyPower = wattsPerM2 * panelAreaInM2 * panelEfficiency * (solarMinutes / 60.0) * ((1-cloudyNess) / 100);
+                data.DailyPower = wattsPerM2 * panelAreaInM2 * panelEfficiency * (solarMinutes / 60.0) * ((100-cloudyNess) / 100);
                 data.CurrentPower = wattsPerM2 * panelAreaInM2 * panelEfficiency;
             } else 
             {
-                data.DailyPower = coefficientForClouds * wattsPerM2 * panelAreaInM2 * panelEfficiency * solarMinutes / 60.0;
-                data.CurrentPower = coefficientForClouds * wattsPerM2 * panelAreaInM2 * panelEfficiency;
+                data.DailyPower = wattsPerM2 * panelAreaInM2 * panelEfficiency * solarMinutes / 60.0;
+                data.CurrentPower = wattsPerM2 * panelAreaInM2 * panelEfficiency;
             }
 
             data.Times = TimeFractions;
@@ -135,6 +140,11 @@ namespace SolarOpt.Libraries
             data.countAngs = data.Y.Count;
             data.HoursOfSun = (int)solarMinutes / 60;
             return data;
+        }
+
+        private static double Add(DateTime dateTime)
+        {
+            throw new NotImplementedException();
         }
 
         public struct PowerData
