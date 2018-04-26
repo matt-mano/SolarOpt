@@ -1,27 +1,38 @@
 ﻿@model SolarOpt.Libraries.SolarPredicter.PowerData
 
 
-<h2>Energy Estimates</h2>
+<h2>System Data</h2>
+<hr />
+<h4><b>Weather:</b></h4>
 <table class="table table-striped">
     <tr>
-        <td>Weather for @Model.City :</td>
-        <td>@Model.CurrentWeather</td>
+        <td  title="Current weather for the location specified by the setup screen.">Weather for @Model.City :</td>
+        <td  title="Current weather for the location specified by the setup screen.">@Model.CurrentWeather</td>
     </tr>
     <tr>
-        <td>Weather Type:</td>
-        <td><img src="@Model.UrlForIcon"/></td>
+        <td title="Weather icons provided by OpenWeatherMap.org.">Weather Type:</td>
+        <td title="Weather icons provided by OpenWeatherMap.org."><img src="@Model.UrlForIcon"/></td>
     </tr>
     <tr>
-        <td>Predicted Current Power Generation (watts): </td>
-        <td>@Model.CurrentPower</td>
-    </tr>
-    <tr>
-        <td>Predicted Daily Power Generation (watt/hours): </td>
-        <td>@Model.DailyPower</td>
+        <td title="Hours between sunrise and sunset.">Today's Solar Availability (Hours)</td>
+        <td title="Hours between sunrise and sunset.">@Model.HoursOfSun</td>
     </tr>
 
 </table>
-<h2>Solar Panel Position:</h2>
+<hr />
+<h4><b>Energy Estimates:</b></h4>
+<table class="table table-striped">
+    <tr>
+        <td title="Power generation estimate in watts right now, based on weather and the installed panel.">Estimated Ideal Current Power Generation (Watts): </td>
+        <td title="Power generation estimate in watts right now, based on weather and the installed panel.">@Model.CurrentPower</td>
+    </tr>
+    <tr>
+        <td title="Estimated Energy that will be produced by the system on the current day, given current weather conditions.">Predicted Daily Energy Generation (Watt*Hours): </td>
+        <td title="Estimated Energy that will be produced by the system on the current day, given current weather conditions.">@Model.DailyPower</td>
+    </tr>
+</table>
+<hr />
+<h4><b>Solar Panel Position:</b></h4>
 <canvas id="angleH"></canvas>
 
 <script src="~/js/Chart.js"></script>

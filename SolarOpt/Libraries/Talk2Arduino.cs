@@ -14,7 +14,7 @@ namespace SolarOpt.Libraries
 {
     public class DataForTCP
     {
-        public static int interval = 12;
+        public static int interval = 13;
         public List<DateTime> dates { get; set; }
         public List<double> angleH { get; set; }
         public List<double> angleA { get; set; }
@@ -24,7 +24,7 @@ namespace SolarOpt.Libraries
             string returner = "";
             var count = angleA.Count;
             returner += "1444,"; //we should def change this later to take in interval and num of intervals actually
-            returner += "20,5";
+            returner += "5,13";
             returner += ",";
             foreach(var a in angleA)
             {

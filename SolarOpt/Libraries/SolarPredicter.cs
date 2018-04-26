@@ -28,7 +28,7 @@ namespace SolarOpt.Libraries
         {
             const double wattsPerM2 = 1000;
             const double coefficientForClouds = 0.25;
-            const double panelAreaInM2 = 0.1;
+            const double panelAreaInM2 = 0.0687;
             const double panelEfficiency = 0.15;
 
             //Get the minutes of the day that are avaiulable
@@ -133,7 +133,7 @@ namespace SolarOpt.Libraries
                 data.Y.Add(5 * Math.Tan(angle));
             }
             data.countAngs = data.Y.Count;
-
+            data.HoursOfSun = (int)solarMinutes / 60;
             return data;
         }
 
@@ -151,6 +151,7 @@ namespace SolarOpt.Libraries
             public int countAngs;
             public string UrlForIcon { get; set; }
             public string City { get; set; }
+            public int HoursOfSun { get; set; }
         }
 
         
